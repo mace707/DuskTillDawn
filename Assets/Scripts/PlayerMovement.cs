@@ -34,6 +34,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Keybinds")]
     public KeyCode JumpKey = KeyCode.Space;
 
+    public GameObject DamageDisplay;
+
     private int Health = 100;
     // Start is called before the first frame update
 
@@ -52,8 +54,21 @@ public class PlayerMovement : MonoBehaviour
     {
         Health -= 5;
         Text.SetText("HEALTH: " + Health.ToString());
+        DisplayDamageMask();
+        
     }
     
+    private void DisplayDamageMask()
+    {
+        DamageDisplay.SetActive(true);
+        Invoke("RemoveDamageMask", 1.0f);
+    }
+
+    private void RemoveDamageMask()
+    {
+        DamageDisplay.SetActive(false);
+    }
+
     // Update is called once per frame
     void Update()
     {

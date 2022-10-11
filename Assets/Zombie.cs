@@ -24,6 +24,14 @@ public class Zombie : MonoBehaviour
 
     public GameObject BloodEffect;
 
+    void Register()
+    {
+        if (!DamageIndicatorSystem.CheckIfObjectInSight(this.transform))
+        {
+            DamageIndicatorSystem.CreateIndicator(this.transform);
+        }
+    }
+
     public void TakeDamage(string obj)
     {
         if (obj == "Z_Head")
@@ -106,7 +114,8 @@ public class Zombie : MonoBehaviour
     }
 
     private void DamagePlayer()
-    {        
+    {
+        Invoke("Register", 4.0f);
         PlayerScript.TakeDamage();
     }
 }
