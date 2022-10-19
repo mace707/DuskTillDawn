@@ -129,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
         else
             RB.AddForce(Direction.normalized * Speed * 10f * AirMultiplier, ForceMode.Force);
 
-        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -17, 17), transform.position.y, Mathf.Clamp(transform.position.z, -17, 17));
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -50, 50), transform.position.y, Mathf.Clamp(transform.position.z, -50, 50));
     }
 
     private void SpeedControl()
