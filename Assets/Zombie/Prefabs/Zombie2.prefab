@@ -442,7 +442,7 @@ GameObject:
   - component: {fileID: 3305920991726709325}
   - component: {fileID: 7537417665459280382}
   - component: {fileID: 557931569760282879}
-  - component: {fileID: 1845606998}
+  - component: {fileID: 4288475676020944098}
   m_Layer: 6
   m_Name: Zombie2
   m_TagString: Zombie
@@ -511,7 +511,7 @@ MonoBehaviour:
   Head: {fileID: 1594737949580638242}
   BloodEffect: {fileID: 1000010675638318, guid: a3768c8a9d1b90d4bb0eb0e4bdbe730c,
     type: 3}
---- !u!54 &1845606998
+--- !u!54 &4288475676020944098
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -1,0 +1,10 @@
+﻿1. Sinking sand and places to get stuck, forcing the player to move (earth quakes, braking ground, etc)
+2. longest shot record
+3. raining zombies?
+4. gun moving
+5. zombies falling off map - Checked
+6. what surrounds the map
+7. crouch
+8. damage indicator
+9. scope
+10. 

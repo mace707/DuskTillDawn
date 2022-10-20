@@ -64,11 +64,8 @@ public class Zombie : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        if (Health <= 0)
-            KillZombie();
-
-        if (transform.position.y < -20)
+    {        
+        if (Health <= 0 || transform.position.y < -50)
             KillZombie();
 
         transform.LookAt(Player);

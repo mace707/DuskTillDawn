@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject DamageDisplay;
 
-    private int Health = 100;
+    private int Health = 1000000;
     // Start is called before the first frame update
 
     public TMPro.TMP_Text Text;
