@@ -7,4 +7,10 @@
 7. crouch
 8. damage indicator
 9. scope
-10. 
+10. Zombie waling sound - scream less frequently unless attacking.
+11. uncover the mystery of the island, ancient burieal site and you were transporting a revival drug that released on the island but it does not work as expected and zombies are created.
+
+
+12. the drug has spread from the plain exploding, but you have to stay within otherwise you die.
+
+13. your mission is to revive zombies and certain ones can be, others need to be killed. there are weapons drops throughout.

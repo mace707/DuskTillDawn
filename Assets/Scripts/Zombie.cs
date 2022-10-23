@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
-
+using UnityStandardAssets.CrossPlatformInput;
+using UnityStandardAssets.Utility;
+using Random = UnityEngine.Random;
 public class Zombie : MonoBehaviour
 {
     private int Health = 100;
@@ -11,8 +14,6 @@ public class Zombie : MonoBehaviour
     public Transform Player;
     int MoveSpeed = 2;
     float MinDist = 12f;
-
-    private PlayerMovement PlayerScript;
 
     bool DamagingPlayer = false;
 
@@ -24,12 +25,17 @@ public class Zombie : MonoBehaviour
 
     public GameObject BloodEffect;
 
-    void Register()
+    public AudioSource ZombieAudioSource;
+
+    private bool ZombieIsDead = false;
+    private bool ZombieSoundInvoked = false;
+
+    // Start is called before the first frame update
+    void Start()
     {
-        if (!DamageIndicatorSystem.CheckIfObjectInSight(this.transform))
-        {
-            DamageIndicatorSystem.CreateIndicator(this.transform);
-        }
+        Player = FindObjectOfType<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().transform;
+        ZombieAnimator = GetComponent<Animator>();
+        ZombieAudioSource = GetComponent<AudioSource>();       
     }
 
     public void TakeDamage(string obj)
@@ -47,46 +53,58 @@ public class Zombie : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Player = FindObjectOfType<PlayerMovement>().transform;
-        ZombieAnimator = GetComponent<Animator>();
-        PlayerScript = Player.GetComponent<PlayerMovement>();
-
-        InvokeRepeating("PlayZombieSound", Random.Range(0, 6), Random.Range(5, 11));
-    }
-
     void PlayZombieSound()
     {
-        AudioSource.PlayClipAtPoint(dictNew[Random.Range(0, dictNew.Count)], transform.position);        
+        AudioSource.PlayClipAtPoint(dictNew[Random.Range(0, dictNew.Count)], transform.position);
     }
 
     // Update is called once per frame
     void Update()
-    {        
+    {
+        if (ZombieIsDead)
+            return;
+
         if (Health <= 0 || transform.position.y < -50)
             KillZombie();
 
         transform.LookAt(Player);
-        
-        if (Vector3.Distance(transform.position, Player.position) >= 2.5)
+
+        var distanceFromPlayer = Vector3.Distance(transform.position, Player.position);
+
+        if (distanceFromPlayer <= 35 && !ZombieSoundInvoked)
+        {
+            ZombieSoundInvoked = true;
+            InvokeRepeating("PlayZombieSound", Random.Range(0, 10), Random.Range(20, 30));
+        }
+        else if (distanceFromPlayer > 35 && ZombieSoundInvoked)
+        {
+            ZombieSoundInvoked = false;
+            CancelInvoke("PlayZombieSound");
+        }
+
+        if (distanceFromPlayer >= 3)
         {
             var transformStart = transform.position;
             transform.position += transform.forward * MoveSpeed * Time.deltaTime;
             transform.position = new Vector3(transform.position.x, transformStart.y, transform.position.z);
-        
-        
-            if (Vector3.Distance(transform.position, Player.position) <= 4 && Health > 0)
+
+            if (distanceFromPlayer <= 35 && !ZombieAudioSource.isPlaying)
+                ZombieAudioSource.Play(0);
+            else if (distanceFromPlayer > 35 && ZombieAudioSource.isPlaying)
+                ZombieAudioSource.Stop();
+
+            if (distanceFromPlayer <= 2 && Health > 0)
             {
-                ZombieAnimator.SetTrigger("Attack");
-                ZombieAnimator.ResetTrigger("Run");
                 if (!DamagingPlayer)
                 {
+                    ZombieAnimator.SetTrigger("Attack");
+                    ZombieAnimator.ResetTrigger("Run");
                     InvokeRepeating("DamagePlayer", 4.0f, 4.0f);
                     DamagingPlayer = true;
-                }
+                    if (ZombieAudioSource.isPlaying)
+                        ZombieAudioSource.Stop();
 
+                }
             }
             else
             {
@@ -95,12 +113,18 @@ public class Zombie : MonoBehaviour
                 ZombieAnimator.ResetTrigger("Attack");
                 ZombieAnimator.SetTrigger("Run");
             }
-        
         }                
     }
 
     private void KillZombie()
     {
+        ZombieIsDead = true;
+
+        if (ZombieAudioSource.isPlaying)
+            ZombieAudioSource.Stop();
+
+        Destroy(ZombieAudioSource);
+
         ZombieAnimator.SetTrigger("ZombieDied");
         Invoke("DestroyThis", 5.0f);
     }
@@ -112,7 +136,7 @@ public class Zombie : MonoBehaviour
 
     private void DamagePlayer()
     {
-        Invoke("Register", 4.0f);
-        PlayerScript.TakeDamage();
+        //Invoke("Register", 4.0f);
+        //PlayerScript.TakeDamage();
     }
 }
