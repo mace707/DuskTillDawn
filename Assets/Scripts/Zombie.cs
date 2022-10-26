@@ -82,38 +82,38 @@ public class Zombie : MonoBehaviour
             CancelInvoke("PlayZombieSound");
         }
 
-        if (distanceFromPlayer >= 3)
+        if (distanceFromPlayer <= 35 && !ZombieAudioSource.isPlaying)
+            ZombieAudioSource.Play(0);
+        else if (distanceFromPlayer > 35 && ZombieAudioSource.isPlaying)
+            ZombieAudioSource.Stop();
+
+        if (distanceFromPlayer > 2)
         {
             var transformStart = transform.position;
             transform.position += transform.forward * MoveSpeed * Time.deltaTime;
             transform.position = new Vector3(transform.position.x, transformStart.y, transform.position.z);
 
-            if (distanceFromPlayer <= 35 && !ZombieAudioSource.isPlaying)
-                ZombieAudioSource.Play(0);
-            else if (distanceFromPlayer > 35 && ZombieAudioSource.isPlaying)
-                ZombieAudioSource.Stop();
-
-            if (distanceFromPlayer <= 2 && Health > 0)
-            {
-                if (!DamagingPlayer)
-                {
-                    ZombieAnimator.SetTrigger("Attack");
-                    ZombieAnimator.ResetTrigger("Run");
-                    InvokeRepeating("DamagePlayer", 4.0f, 4.0f);
-                    DamagingPlayer = true;
-                    if (ZombieAudioSource.isPlaying)
-                        ZombieAudioSource.Stop();
-
-                }
-            }
-            else
+            if (DamagingPlayer)
             {
                 CancelInvoke("DamagePlayer");
                 DamagingPlayer = false;
-                ZombieAnimator.ResetTrigger("Attack");
-                ZombieAnimator.SetTrigger("Run");
             }
-        }                
+
+            ZombieAnimator.ResetTrigger("Attack");
+            ZombieAnimator.SetTrigger("Run");
+        }
+        else if (distanceFromPlayer <= 2 && Health > 0)
+        {
+            ZombieAnimator.SetTrigger("Attack");
+            ZombieAnimator.ResetTrigger("Run");
+            if (!DamagingPlayer)
+            {
+                InvokeRepeating("DamagePlayer", 4.0f, 4.0f);
+                DamagingPlayer = true;
+                if (ZombieAudioSource.isPlaying)
+                    ZombieAudioSource.Stop();
+            }
+        }
     }
 
     private void KillZombie()
@@ -122,6 +122,8 @@ public class Zombie : MonoBehaviour
 
         if (ZombieAudioSource.isPlaying)
             ZombieAudioSource.Stop();
+
+        Destroy(GetComponent<Marker>().MarkerObj);
 
         Destroy(ZombieAudioSource);
 
