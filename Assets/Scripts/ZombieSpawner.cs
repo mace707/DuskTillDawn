@@ -8,8 +8,8 @@ public class ZombieSpawner : MonoBehaviour
 
     public GameObject ZombiePrefab;
 
-    private float CoolDownTimer = 40;
-    private float CoolDown = 40;
+    private float CoolDownTimer = 20;
+    private float CoolDown = 20;
 
     private List<Vector3> SpawnBoxes = new List<Vector3>
     {
@@ -35,12 +35,12 @@ public class ZombieSpawner : MonoBehaviour
 
     void SpawnZombie()
     {
-        if (GameObject.FindObjectsOfType<Zombie>().Length < 20)
+        if (GameObject.FindObjectsOfType<Zombie>().Length < 25)
         {
             foreach (var spawnBox in SpawnBoxes)
                 Instantiate(ZombiePrefab, spawnBox, transform.rotation);
 
-            if (CoolDown >= 5)
+            if (CoolDown >= 2)
                 CoolDown -= 1;            
         }
 

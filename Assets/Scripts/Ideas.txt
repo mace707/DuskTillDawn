@@ -14,3 +14,17 @@
 12. the drug has spread from the plain exploding, but you have to stay within otherwise you die.
 
 13. your mission is to revive zombies and certain ones can be, others need to be killed. there are weapons drops throughout.
+
+14. Camera Shake
+
+15. Escape Menu
+
+16. Stamina, Zombies speed up if they eat, slow down if bitten
+
+17. scratching/chewing sounds on being attacked.
+
+18. scratches across the screen.
+
+19. different weapons.
+
+20. Bombs and landmines.

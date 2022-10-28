@@ -30,12 +30,16 @@ public class Zombie : MonoBehaviour
     private bool ZombieIsDead = false;
     private bool ZombieSoundInvoked = false;
 
+    public GameObject ZombieMarkerPrefab;
+
+    private GameObject ZombieMarkerInstance;
+
     // Start is called before the first frame update
     void Start()
     {
-        Player = FindObjectOfType<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().transform;
+        Player = FindItemsHolder.GetPlayerTransform();
         ZombieAnimator = GetComponent<Animator>();
-        ZombieAudioSource = GetComponent<AudioSource>();       
+        ZombieAudioSource = GetComponent<AudioSource>();
     }
 
     public void TakeDamage(string obj)
@@ -97,6 +101,7 @@ public class Zombie : MonoBehaviour
             {
                 CancelInvoke("DamagePlayer");
                 DamagingPlayer = false;
+                Destroy(ZombieMarkerInstance);
             }
 
             ZombieAnimator.ResetTrigger("Attack");
@@ -110,10 +115,15 @@ public class Zombie : MonoBehaviour
             {
                 InvokeRepeating("DamagePlayer", 4.0f, 4.0f);
                 DamagingPlayer = true;
+
+                ZombieMarkerInstance = Instantiate(ZombieMarkerPrefab, FindItemsHolder.GetRotionalMarkerHolder());
+                var ZombieMarker = ZombieMarkerInstance.GetComponent<Marker>();
+                ZombieMarker.Construct(Player, transform);
+
                 if (ZombieAudioSource.isPlaying)
                     ZombieAudioSource.Stop();
             }
-        }
+        }        
     }
 
     private void KillZombie()
@@ -123,7 +133,7 @@ public class Zombie : MonoBehaviour
         if (ZombieAudioSource.isPlaying)
             ZombieAudioSource.Stop();
 
-        Destroy(GetComponent<Marker>().MarkerObj);
+        Destroy(ZombieMarkerInstance);
 
         Destroy(ZombieAudioSource);
 

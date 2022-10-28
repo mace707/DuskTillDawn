@@ -4,26 +4,24 @@ using UnityEngine;
 
 public class Marker : MonoBehaviour
 {        
-    [SerializeField]
-    public GameObject MarkerObj;
+    private Transform PlayerTransform;
+    private Transform EnemyTransform;
 
-    private Transform MarkerHandlerTransform;
-    private Transform PlayerTransfrom;
-
-    // Start is called before the first frame update
-    void Start()
-    {        
-        PlayerTransfrom = FindObjectOfType<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().transform;
-        MarkerHandlerTransform = FindObjectOfType<RotationalMarkerHolder>().transform;
-        MarkerObj = Instantiate(MarkerObj, MarkerHandlerTransform);
+    public void Construct(Transform playerTransform, Transform enemyTransform)
+    {
+        PlayerTransform = playerTransform;
+        EnemyTransform = enemyTransform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        var targetAngle = VectorMath.GetAngleOfDirectionVector(PlayerTransfrom, transform);
-        targetAngle += 90 + (PlayerTransfrom.eulerAngles.y - 180);        
-        Quaternion target = Quaternion.Euler(0, 0, targetAngle);
-        MarkerObj.transform.rotation = Quaternion.Slerp(MarkerObj.transform.rotation, target, Time.deltaTime * 5.0f);
+        if (PlayerTransform && EnemyTransform)
+        {
+            var targetAngle = VectorMath.GetAngleOfDirectionVector(PlayerTransform, EnemyTransform);
+            targetAngle += 90 + (PlayerTransform.eulerAngles.y - 180);
+            Quaternion target = Quaternion.Euler(0, 0, targetAngle);
+            transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * 5.0f);
+        }
     }
 }
