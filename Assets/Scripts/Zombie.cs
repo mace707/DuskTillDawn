@@ -11,7 +11,9 @@ public class Zombie : MonoBehaviour
 
     private Animator ZombieAnimator;
 
-    public Transform Player;
+    public Transform PlayerTransform;
+
+    private FirstPersonDamageHandler FPSDamagerHandler;
     int MoveSpeed = 2;
     float MinDist = 12f;
 
@@ -37,7 +39,8 @@ public class Zombie : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Player = FindItemsHolder.GetPlayerTransform();
+        PlayerTransform = Statics.GetPlayerTransform();
+        FPSDamagerHandler = PlayerTransform.GetComponent<FirstPersonDamageHandler>();
         ZombieAnimator = GetComponent<Animator>();
         ZombieAudioSource = GetComponent<AudioSource>();
     }
@@ -65,15 +68,25 @@ public class Zombie : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (Statics.IsPaused())
+        {
+            if (ZombieAudioSource.isPlaying)
+            {
+                ZombieAudioSource.Stop();
+            }
+            return;
+        }
+
         if (ZombieIsDead)
             return;
 
         if (Health <= 0 || transform.position.y < -50)
             KillZombie();
 
-        transform.LookAt(Player);
+        transform.LookAt(PlayerTransform);
 
-        var distanceFromPlayer = Vector3.Distance(transform.position, Player.position);
+        var distanceFromPlayer = Vector3.Distance(transform.position, PlayerTransform.position);
 
         if (distanceFromPlayer <= 35 && !ZombieSoundInvoked)
         {
@@ -113,12 +126,12 @@ public class Zombie : MonoBehaviour
             ZombieAnimator.ResetTrigger("Run");
             if (!DamagingPlayer)
             {
-                InvokeRepeating("DamagePlayer", 4.0f, 4.0f);
+                InvokeRepeating("DamagePlayer", 1.0f, 2.0f);
                 DamagingPlayer = true;
 
-                ZombieMarkerInstance = Instantiate(ZombieMarkerPrefab, FindItemsHolder.GetRotionalMarkerHolder());
+                ZombieMarkerInstance = Instantiate(ZombieMarkerPrefab, Statics.GetRotionalMarkerHolder());
                 var ZombieMarker = ZombieMarkerInstance.GetComponent<Marker>();
-                ZombieMarker.Construct(Player, transform);
+                ZombieMarker.Construct(PlayerTransform, transform);
 
                 if (ZombieAudioSource.isPlaying)
                     ZombieAudioSource.Stop();
@@ -148,7 +161,6 @@ public class Zombie : MonoBehaviour
 
     private void DamagePlayer()
     {
-        //Invoke("Register", 4.0f);
-        //PlayerScript.TakeDamage();
+        FPSDamagerHandler.TakeDamage(Statics.EnemyType.Zombie_Normal);
     }
 }

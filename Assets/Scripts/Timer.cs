@@ -25,9 +25,9 @@ public class Timer : MonoBehaviour
             }
             else
             {
+                SceneManager.LoadScene(3);
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-                SceneManager.LoadScene(3);
                 Debug.Log("Time is UP!");
                 TimeLeft = 0;
                 TimerOn = false;

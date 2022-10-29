@@ -27,6 +27,9 @@ public class ZombieSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Statics.IsPaused())
+            return;
+
         CoolDownTimer -= Time.deltaTime;
 
         if (CoolDownTimer <= 0)

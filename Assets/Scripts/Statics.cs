@@ -2,11 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FindItemsHolder : MonoBehaviour
+public class Statics : MonoBehaviour
 {
+    private static bool Paused = false;
     private static Transform PlayerTransform;
     private static Transform RelationalMarkerHolder;
     
+    public enum EnemyType
+    {
+        Zombie_Normal,
+    }
+
     // Start is called before the first frame update
     public static Transform GetPlayerTransform()
     {
@@ -22,5 +28,16 @@ public class FindItemsHolder : MonoBehaviour
             RelationalMarkerHolder = FindObjectOfType<RotationalMarkerHolder>().transform;
 
         return RelationalMarkerHolder;
+    }
+
+    public static bool IsPaused()
+    {
+        return Paused;
+    }
+
+    public static void SetPaused(bool paused)
+    {
+        Paused = paused;
+        Time.timeScale = paused ? 0 : 1;
     }
 }
