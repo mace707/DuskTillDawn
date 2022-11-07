@@ -14,19 +14,6 @@ public class PlayerDetector : MonoBehaviour
         InvokeRepeating("TrackPlayer", 5.0f, 2.0f);
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log(other.tag);
-        if (other.tag == "Player")
-        {
-            Debug.Log("POSITION 1: " + PlayerTransform.position);
-            PlayerTransform.position = MovementTracker.Dequeue().position;
-            Debug.Log("POSITION 2: " + PlayerTransform.position);
-            Debug.Log("collided");
-        }
-        
-    }
-
     private void TrackPlayer()
     {
         if (MovementTracker.Count >= 5)

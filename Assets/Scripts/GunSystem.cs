@@ -47,7 +47,7 @@ public class GunSystem : MonoBehaviour
 
     private void UpdateBulletText()
     {
-        TxtBulletsLeft.text = "Bullets: " + BulletsLeft.ToString() + "/" + MagazineSize.ToString();
+        TxtBulletsLeft.text = "AMMO: " + BulletsLeft.ToString() + "/" + MagazineSize.ToString();
     }
 
     private void MyInput()

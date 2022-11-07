@@ -7,11 +7,62 @@ using TMPro;
 public class FirstPersonDamageHandler : MonoBehaviour
 {
     [SerializeField] private int Health = 100;
+    [SerializeField] private float MaxStamina = 25;
+    [SerializeField] private float CurrentStamina = 25f;
+    [SerializeField] private float StaminaDecay = 2f;
     [SerializeField] private TMP_Text TXTHealth;
+    [SerializeField] private TMP_Text TXTStamina;
+
+    bool IsRunning = false;
 
     private void Start()
     {
         TXTHealth.SetText("HEALTH: " + Health.ToString());
+        TXTStamina.SetText("STAM: " + CurrentStamina.ToString("F0"));
+    }
+
+    private void Update()
+    {   
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (CurrentStamina >= 10)
+                CurrentStamina -= 10;
+        }
+        if (Input.GetKey(KeyCode.LeftShift) && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)))
+        {
+            if (CurrentStamina > 0)
+            {
+                IsRunning = true;
+                CurrentStamina -= StaminaDecay * Time.deltaTime;
+            }
+            
+            TXTStamina.SetText("STAM: " + CurrentStamina.ToString("F0"));
+        }
+        else
+        {
+            if (IsRunning)
+                Invoke("RebuildStamina", 2.0f);
+        }
+
+        if (!IsRunning && CurrentStamina < MaxStamina)
+        {
+            if (CurrentStamina/MaxStamina < 0.5)
+                CurrentStamina += Time.deltaTime;
+            else
+                CurrentStamina += 3 * Time.deltaTime;
+
+            TXTStamina.SetText("STAM: " + CurrentStamina.ToString("F0"));
+        }
+    }
+
+    private void RebuildStamina()
+    {
+        IsRunning = false;
+    }
+
+    public float GetStamina()
+    {
+        return CurrentStamina;
     }
 
     public void TakeDamage(Statics.EnemyType enemyType)

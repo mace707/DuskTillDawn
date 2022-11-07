@@ -501,7 +501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1184867d652533a4c95da2abd5697f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
+  PlayerTransform: {fileID: 0}
   YPosition: 0
   dictNew:
   - {fileID: 8300000, guid: ff8240148ee026c4babb53949381e1cd, type: 3}
@@ -512,8 +512,7 @@ MonoBehaviour:
   Head: {fileID: 1594737949580638242}
   BloodEffect: {fileID: 1000010675638318, guid: a3768c8a9d1b90d4bb0eb0e4bdbe730c,
     type: 3}
-  ZombieAudioSource: {fileID: 0}
-  EnemyMarker: {fileID: 0}
+  ZombieAudioSource: {fileID: 6321964415831092476}
   ZombieMarkerPrefab: {fileID: 222832262583875509, guid: 792d5c56348a88149a6277bba6b7f10f,
     type: 3}
 --- !u!54 &4288475676020944098

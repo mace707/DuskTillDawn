@@ -11,6 +11,8 @@ public class ZombieSpawner : MonoBehaviour
     private float CoolDownTimer = 20;
     private float CoolDown = 20;
 
+    public List<Terrain> Terrains;
+
     private List<Vector3> SpawnBoxes = new List<Vector3>
     {
         new Vector3(-45, 50, -45),
@@ -21,6 +23,7 @@ public class ZombieSpawner : MonoBehaviour
 
     private void Start()
     {
+        Terrain.GetActiveTerrains(Terrains);
         SpawnZombie();
     }
 
@@ -37,7 +40,7 @@ public class ZombieSpawner : MonoBehaviour
     }
 
     void SpawnZombie()
-    {
+    { 
         if (GameObject.FindObjectsOfType<Zombie>().Length < 25)
         {
             foreach (var spawnBox in SpawnBoxes)

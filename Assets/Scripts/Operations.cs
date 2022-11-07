@@ -11,6 +11,9 @@ public class Operations : MonoBehaviour
     [SerializeField]
     private GameObject Crosshair;
 
+    [SerializeField]
+    private bool EnableOperations = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +23,9 @@ public class Operations : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!EnableOperations)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Statics.SetPaused(!Statics.IsPaused());

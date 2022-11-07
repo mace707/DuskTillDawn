@@ -43,6 +43,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
+        private FirstPersonDamageHandler DamageHandler;
+
         // Use this for initialization
         private void Start()
         {
@@ -56,6 +58,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
+            DamageHandler = GetComponent<FirstPersonDamageHandler>();
         }
 
 
@@ -67,7 +70,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             RotateView();
             // the jump state needs to read here to make sure it is not missed
-            if (!m_Jump)
+            if (!m_Jump && DamageHandler.GetStamina() >= 10)
             {
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
             }
@@ -219,7 +222,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
 #endif
             // set the desired speed to be walking or running
-            speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
+
+            if (DamageHandler.GetStamina() <= 10)
+                speed = m_WalkSpeed;
+            else
+                speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
+
             m_Input = new Vector2(horizontal, vertical);
 
             // normalize input if it exceeds 1 in combined length:

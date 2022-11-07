@@ -15,7 +15,6 @@ public class Zombie : MonoBehaviour
 
     private FirstPersonDamageHandler FPSDamagerHandler;
     int MoveSpeed = 2;
-    float MinDist = 12f;
 
     bool DamagingPlayer = false;
 
@@ -81,7 +80,7 @@ public class Zombie : MonoBehaviour
         if (ZombieIsDead)
             return;
 
-        if (Health <= 0 || transform.position.y < -50)
+        if (Health <= 0 || transform.position.y < 0)
             KillZombie();
 
         transform.LookAt(PlayerTransform);
@@ -126,6 +125,9 @@ public class Zombie : MonoBehaviour
             ZombieAnimator.ResetTrigger("Run");
             if (!DamagingPlayer)
             {
+                if (MoveSpeed < 6)
+                    MoveSpeed += 2;
+
                 InvokeRepeating("DamagePlayer", 1.0f, 2.0f);
                 DamagingPlayer = true;
 
@@ -141,6 +143,7 @@ public class Zombie : MonoBehaviour
 
     private void KillZombie()
     {
+        CancelInvoke("DamagePlayer");
         ZombieIsDead = true;
 
         if (ZombieAudioSource.isPlaying)
@@ -151,7 +154,7 @@ public class Zombie : MonoBehaviour
         Destroy(ZombieAudioSource);
 
         ZombieAnimator.SetTrigger("ZombieDied");
-        Invoke("DestroyThis", 5.0f);
+        Invoke("DestroyThis", 2.0f);
     }
 
     private void DestroyThis()

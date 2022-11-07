@@ -28,3 +28,5 @@
 19. different weapons.
 
 20. Bombs and landmines.
+
+21. Menus - instead of new scene for options menu, hide and show the menu you want the user to interact with in a single scene.

@@ -13,6 +13,11 @@ public class Statics : MonoBehaviour
         Zombie_Normal,
     }
 
+    public void Start()
+    {
+
+    }
+
     // Start is called before the first frame update
     public static Transform GetPlayerTransform()
     {
