@@ -41,7 +41,7 @@ public class ZombieSpawner : MonoBehaviour
 
     void SpawnZombie()
     { 
-        if (GameObject.FindObjectsOfType<Zombie>().Length < 25)
+        if (GameObject.FindObjectsOfType<ZombieDamage>().Length < 25)
         {
             foreach (var spawnBox in SpawnBoxes)
                 Instantiate(ZombiePrefab, spawnBox, transform.rotation);

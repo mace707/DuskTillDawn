@@ -52,6 +52,7 @@ public class OutOfBoundsChecker : MonoBehaviour
         {
             CancelInvoke("DisableWarning");
             Invoke("EnableWarning", 0.5f);
+            other.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().SetInWater(true);
         }
     }
 
@@ -62,6 +63,7 @@ public class OutOfBoundsChecker : MonoBehaviour
             PlayerOutOfBounds = false;
             CancelInvoke("EnableWarning");
             Invoke("DisableWarning", 1.5f);
+            other.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().SetInWater(false);
         }
     }
 }

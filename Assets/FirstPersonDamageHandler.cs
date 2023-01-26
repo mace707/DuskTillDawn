@@ -6,6 +6,7 @@ using TMPro;
 
 public class FirstPersonDamageHandler : MonoBehaviour
 {
+    [SerializeField] private GunSystem PlayerWeapon;
     [SerializeField] private int Health = 100;
     [SerializeField] private float MaxStamina = 25;
     [SerializeField] private float CurrentStamina = 25f;
@@ -14,6 +15,17 @@ public class FirstPersonDamageHandler : MonoBehaviour
     [SerializeField] private TMP_Text TXTStamina;
 
     bool IsRunning = false;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "AmmoPack")
+            PlayerWeapon.ResetWeapon();
+        else if (other.tag == "HealthPack")
+        {
+            Health = 100;
+            TXTHealth.SetText("HEALTH: " + Health.ToString());
+        }
+    }
 
     private void Start()
     {
@@ -65,20 +77,23 @@ public class FirstPersonDamageHandler : MonoBehaviour
         return CurrentStamina;
     }
 
-    public void TakeDamage(Statics.EnemyType enemyType)
+    public void TakeDamage(int damage = 0)
     {
-        switch (enemyType)
-        {
-            case Statics.EnemyType.Zombie_Normal:
-                Health -= 10;
-                break;
-            default:
-                break;
-        }
+        Health -= damage;
 
         if (Health <= 0)
             SceneManager.LoadScene(2);
 
         TXTHealth.SetText("HEALTH: " + Health.ToString());
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {        
+        if (collision.collider.tag == "Weapon")
+        {
+            var weapon = collision.collider.gameObject.GetComponent<WeaponScript>();            
+            TakeDamage(weapon.GetDamage());
+            weapon.Disable();
+        }
     }
 }

@@ -8,11 +8,14 @@ TagManager:
   - Zombie
   - Z_Head
   - Z_Body
+  - AmmoPack
+  - HealthPack
+  - Weapon
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Weapon
   - Water
   - UI
   - Enemy

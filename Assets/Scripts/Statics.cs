@@ -7,15 +7,33 @@ public class Statics : MonoBehaviour
     private static bool Paused = false;
     private static Transform PlayerTransform;
     private static Transform RelationalMarkerHolder;
-    
+
+    static private int RandomValue = 10;
+    private static int StartRandomValue = 10;
+
     public enum EnemyType
     {
         Zombie_Normal,
     }
 
     public void Start()
-    {
+    {        
+    }
 
+    public static int GetRandomValueRange()
+    {
+        return RandomValue + 1;
+    }
+
+    public static bool CheckRandomValue(int value)
+    {
+        var equal = value == RandomValue;
+        if (!equal && RandomValue > 1)
+            RandomValue--;
+        else if (equal)
+            RandomValue = StartRandomValue;
+        
+        return equal;
     }
 
     // Start is called before the first frame update

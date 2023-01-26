@@ -34,15 +34,26 @@ public class GunSystem : MonoBehaviour
 
     public TMPro.TMP_Text TxtBulletsLeft;
 
-    private Animator GunAnimator;
+    private Animator GunAnimator;    
+
+    public enum GunTypes
+    {
+        GunTypeSniper,
+        GunTypeShotGun
+    };
+
+    public GunTypes GunType;
 
     private void Awake()
+    {
+        ResetWeapon();
+    }
+
+    public void ResetWeapon()
     {
         BulletsLeft = MagazineSize;
         ReadyToShoot = true;
         UpdateBulletText();
-
-
     }
 
     private void UpdateBulletText()
@@ -73,7 +84,8 @@ public class GunSystem : MonoBehaviour
             var collisionTag = RayHit.collider.tag;
             if (collisionTag == "Z_Head" || collisionTag == "Z_Body")
             {
-                RayHit.collider.GetComponentInParent<Zombie>().TakeDamage(collisionTag);
+                //RayHit.collider.GetComponentInParent<Zombie>().TakeDamage(collisionTag, GunType);
+                RayHit.collider.GetComponentInParent<ZombieAnimationEvents>().Kill();
                 var bloodEffect = Instantiate(BloodEffect, RayHit.point, Quaternion.identity);
                 Destroy(bloodEffect, 0.5f);
             }

@@ -35,27 +35,61 @@ public class Zombie : MonoBehaviour
 
     private GameObject ZombieMarkerInstance;
 
+    public List<GameObject> ItemDrops;
+    
     // Start is called before the first frame update
     void Start()
     {
         PlayerTransform = Statics.GetPlayerTransform();
         FPSDamagerHandler = PlayerTransform.GetComponent<FirstPersonDamageHandler>();
         ZombieAnimator = GetComponent<Animator>();
-        ZombieAudioSource = GetComponent<AudioSource>();
+        ZombieAudioSource = GetComponent<AudioSource>();        
     }
 
-    public void TakeDamage(string obj)
+    public void TakeDamage(string obj, GunSystem.GunTypes gunType)
     {
+        var damage = 0;
         if (obj == "Z_Head")
         {
-            Health -= 100;
+            if (gunType == GunSystem.GunTypes.GunTypeShotGun)
+            {
+                var distance = Vector3.Distance(PlayerTransform.position, transform.position);
+                if (distance <= 20)
+                    damage = 150;
+                else if (distance <= 40)
+                    damage = 75;
+                else
+                    damage = 50;
+
+                Health -= damage;
+            }
+            else
+            {
+                Health -= 100;
+            }
+            
             var bloodEffect = Instantiate(BloodEffect, Head.transform.position, Quaternion.identity);            
             Destroy(Head, 0);
             Destroy(bloodEffect, 2f);
         }
         else if (obj == "Z_Body")
         {
-            Health -= Random.Range(33,50);
+            if (gunType == GunSystem.GunTypes.GunTypeShotGun)
+            {
+                var distance = Vector3.Distance(PlayerTransform.position, transform.position);
+                if (distance <= 10)
+                    damage = 150;
+                else if (distance <= 20)
+                    damage = 90;
+                else
+                    damage = 30;
+
+                Health -= damage;
+            }
+            else
+            {
+                Health -= Random.Range(33, 50);
+            }
         }
     }
 
@@ -143,6 +177,12 @@ public class Zombie : MonoBehaviour
 
     private void KillZombie()
     {
+        if (Statics.CheckRandomValue(Random.Range(0, Statics.GetRandomValueRange())))
+        {
+            var idx = Random.Range(0, ItemDrops.Count);
+            Instantiate(ItemDrops[idx], new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), ItemDrops[idx].transform.rotation);
+        }
+
         CancelInvoke("DamagePlayer");
         ZombieIsDead = true;
 
@@ -164,6 +204,6 @@ public class Zombie : MonoBehaviour
 
     private void DamagePlayer()
     {
-        FPSDamagerHandler.TakeDamage(Statics.EnemyType.Zombie_Normal);
+        FPSDamagerHandler.TakeDamage(10);
     }
 }

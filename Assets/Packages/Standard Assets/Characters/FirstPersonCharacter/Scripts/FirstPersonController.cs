@@ -26,6 +26,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private LerpControlledBob m_JumpBob = new LerpControlledBob();
         [SerializeField] private float m_StepInterval;
         [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
+        [SerializeField] private AudioClip[] m_WaterFootstepSounds;    // an array of footstep sounds that will be randomly selected from.        
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
 
@@ -41,9 +42,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_StepCycle;
         private float m_NextStep;
         private bool m_Jumping;
-        private AudioSource m_AudioSource;
+        private AudioSource m_AudioSource;           
 
         private FirstPersonDamageHandler DamageHandler;
+
+        private bool m_InWater = false;
 
         // Use this for initialization
         private void Start()
@@ -173,14 +176,17 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 return;
             }
+
+            var activeFootSteoSounds = m_InWater ? m_WaterFootstepSounds : m_FootstepSounds;
+
             // pick & play a random footstep sound from the array,
             // excluding sound at index 0
-            int n = Random.Range(1, m_FootstepSounds.Length);
-            m_AudioSource.clip = m_FootstepSounds[n];
+            int n = Random.Range(1, activeFootSteoSounds.Length);
+            m_AudioSource.clip = activeFootSteoSounds[n];
             m_AudioSource.PlayOneShot(m_AudioSource.clip);
             // move picked sound to index 0 so it's not picked next time
-            m_FootstepSounds[n] = m_FootstepSounds[0];
-            m_FootstepSounds[0] = m_AudioSource.clip;
+            activeFootSteoSounds[n] = activeFootSteoSounds[0];
+            activeFootSteoSounds[0] = m_AudioSource.clip;
         }
 
 
@@ -259,13 +265,18 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (m_CollisionFlags == CollisionFlags.Below)
             {
                 return;
-            }
+            }        
 
             if (body == null || body.isKinematic)
             {
                 return;
             }
             body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
+        }
+
+        public void SetInWater(bool inWater)
+        {
+            m_InWater = inWater;
         }
     }
 }
