@@ -6,7 +6,6 @@ using TMPro;
 
 public class FirstPersonDamageHandler : MonoBehaviour
 {
-    [SerializeField] private GunSystem PlayerWeapon;
     [SerializeField] private int Health = 100;
     [SerializeField] private float MaxStamina = 25;
     [SerializeField] private float CurrentStamina = 25f;
@@ -18,9 +17,7 @@ public class FirstPersonDamageHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "AmmoPack")
-            PlayerWeapon.ResetWeapon();
-        else if (other.tag == "HealthPack")
+        if (other.tag == "HealthPack")
         {
             Health = 100;
             TXTHealth.SetText("HEALTH: " + Health.ToString());

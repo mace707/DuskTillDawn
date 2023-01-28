@@ -40,7 +40,7 @@ public class Statics : MonoBehaviour
     public static Transform GetPlayerTransform()
     {
         if (!PlayerTransform)
-            PlayerTransform = FindObjectOfType<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().transform;
+            PlayerTransform = FindObjectOfType<FPSController>().transform;
 
         return PlayerTransform;
     }

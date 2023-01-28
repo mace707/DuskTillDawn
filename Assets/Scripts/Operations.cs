@@ -12,12 +12,16 @@ public class Operations : MonoBehaviour
     private GameObject Crosshair;
 
     [SerializeField]
+    private GameObject InventoryObj;
+
+    [SerializeField]
     private bool EnableOperations = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        MenuObj.SetActive(false);
+        InventoryObj.SetActive(false);
     }
 
     // Update is called once per frame
@@ -35,6 +39,18 @@ public class Operations : MonoBehaviour
             Cursor.lockState = Statics.IsPaused() ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = Statics.IsPaused();
         }
+        else if (Input.GetKey(KeyCode.Tab))
+        {
+            InventoryObj.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            InventoryObj.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+
     }
 
     public void ResumeGame()
