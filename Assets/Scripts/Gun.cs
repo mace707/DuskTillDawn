@@ -16,14 +16,14 @@ public class Gun : MonoBehaviour
     private int ammo; // The current amount of ammo the player has
     private bool isReloading; // Whether the gun is currently being reloaded
 
-    public GunManager PlayerAnimationController;
+    public GunManager m_GunManager;
     private AudioSource GunShotAudioSource;
 
     public RaycastHit RayHit;
     public Transform AttackPoint;
     public GameObject MuzzleFlash;
     public GameObject BloodEffect;
-    public Camera Cam;    
+    public Camera Cam;
 
     void Start()
     {
@@ -48,7 +48,7 @@ public class Gun : MonoBehaviour
             // Reload the gun after the reload time has elapsed
             Invoke("Reload", reloadTime);
 
-            PlayerAnimationController.SetState(GunManager.GUNSTATES.GUNSTATE_RELOAD);
+            m_GunManager.SetState(GunManager.GUNSTATES.GUNSTATE_RELOAD);
         }
     }
 
@@ -82,18 +82,16 @@ public class Gun : MonoBehaviour
             // Check if there is ammo in the magazine
             if (ammo > 0)
             {
-                if (GunShotAudioSource.isPlaying)
-                    GunShotAudioSource.Stop();
 
-                GunShotAudioSource.PlayOneShot(GunShotAudioSource.clip);
+                PlayGunShotSound();
 
                 if (Physics.Raycast(Cam.transform.position, Cam.transform.forward, out RayHit, 5000))
                 {
                     var collisionTag = RayHit.collider.tag;
                     if (collisionTag == "Z_Head" || collisionTag == "Z_Body")
                     {
-                        //RayHit.collider.GetComponentInParent<Zombie>().TakeDamage(collisionTag, GunType);
-                        RayHit.collider.GetComponentInParent<ZombieAnimationEvents>().Kill();
+                        var dmg = collisionTag == "Z_Head" ? 120 : 15;
+                        RayHit.collider.GetComponentInParent<ZombieAnimationEvents>().TakeDamage(dmg);
                         var bloodEffect = Instantiate(BloodEffect, RayHit.point, Quaternion.identity);
                         Destroy(bloodEffect, 0.5f);
                     }
@@ -105,12 +103,36 @@ public class Gun : MonoBehaviour
                 // Decrement the ammo count
                 ammo--;
 
-                PlayerAnimationController.SetState(GunManager.GUNSTATES.GUNSTATE_SHOOT);
+                m_GunManager.SetState(GunManager.GUNSTATES.GUNSTATE_SHOOT);
             }
             else
             {
                 StartReload();
             }
         }
+    }
+
+    void PlayGunShotSound()
+    {
+        if (GunShotAudioSource.isPlaying)
+            GunShotAudioSource.Stop();
+
+        GunShotAudioSource.PlayOneShot(GunShotAudioSource.clip);
+
+        float sphereCastDistance = 50f;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, sphereCastDistance, LayerMask.GetMask("Enemy"));
+        foreach (Collider collider in colliders)
+        {
+            ZombieAnimationEvents enemy = collider.GetComponent<ZombieAnimationEvents>();
+            if (enemy != null)
+            {
+                enemy.AttackPlayer(GetComponentInParent<FPSController>().transform);
+            }
+        }
+    }
+
+    void PlayStepSound()
+    {
+        m_GunManager.PlayStepSound();
     }
 }

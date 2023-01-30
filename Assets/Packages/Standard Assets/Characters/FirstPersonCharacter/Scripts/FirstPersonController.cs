@@ -187,6 +187,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // move picked sound to index 0 so it's not picked next time
             activeFootSteoSounds[n] = activeFootSteoSounds[0];
             activeFootSteoSounds[0] = m_AudioSource.clip;
+
         }
 
 

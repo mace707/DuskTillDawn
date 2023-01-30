@@ -13,6 +13,7 @@ public class ZombieAnimationEvents : MonoBehaviour
 
     private GameObject ZombieMarkerInstance;
 
+    [SerializeField] private int Health = 100;
     public enum STATE
     {
         STATE_IDLE,
@@ -130,9 +131,45 @@ public class ZombieAnimationEvents : MonoBehaviour
         Weapon.Disable();
     }
 
+    public void TakeDamage(int damage)
+    {
+        Health -= damage;
+
+        if (Health <= 0)
+            Kill();
+
+    }
+
     public void Kill()
     {
         Destroy(gameObject);
         Destroy(ZombieMarkerInstance);
+    }
+
+    public void SetRunState()
+    {
+        CurrentState = STATE.STATE_RUN;
+    }
+
+    public void SetAlertAndChaseAnimations()
+    {
+        CurrentState = STATE.STATE_SCREAM;
+        Invoke("SetRunState", 0.25f);
+    }
+
+    public void AttackPlayer(Transform player)
+    {
+        Debug.Log(CurrentState);
+        if (CurrentState != STATE.STATE_ATTACK_1 && CurrentState != STATE.STATE_RUN && CurrentState != STATE.STATE_SCREAM)
+        {
+            StopAllCoroutines();
+
+            Vector3 dir = player.position - transform.position;
+            dir.y = 0; // keep the direction strictly horizontal             
+            TargetRotation = Quaternion.LookRotation(dir, Vector3.up);
+
+
+                SetAlertAndChaseAnimations();
+        }
     }
 }
